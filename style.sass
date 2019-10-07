@@ -5,6 +5,8 @@
 $dark: #232b2b
 $light: #FFFFFF
 $gradient: linear-gradient(43deg, #08AEEA 0%, #2AF598 100%)
+$radius: 4px
+$global-unit: 8px
 
 body
   font-family: helvetica, sans-serif
@@ -23,35 +25,34 @@ h2
 .maintenance-page
   a
     color: #FFF
-    .layout-container
-      text-align: center
-      display: flex
-      height: 100vh
-      width: 100vw
-      max-width: 700px
-      flex-direction: column
-      justify-content: center
-      box-sizing: border-box
-      padding: 24px
-      margin: 0px auto
-      font-size: 14px
-    .name-and-slogan
-      font-size: 3.4em;
-      letter-spacing: -.08em;
-    .header
-      img
-        width: 40%
-        height: auto
-        clear: both
+  .layout-container
+    text-align: center
+    display: flex
+    height: 100vh
+    width: 100vw
+    max-width: 700px
+    flex-direction: column
+    justify-content: center
+    box-sizing: border-box
+    padding: 24px
+    margin: 0px auto
+    font-size: 14px
+  .name-and-slogan
+    font-size: 3.4em;
+    letter-spacing: -.08em;
+  .header
+    img
+      width: 40%
+      height: auto
+      clear: both
     h1
-      font-weight: 200
       font-weight: 600
-    &:after
-      content: "®"
-      font-size: 10px
-      color: #FFF
-      font-weight: 200
-      margin-left: -.4em
+      &:after
+        content: "®"
+        font-size: 10px
+        color: #FFF
+        font-weight: 200
+        margin-left: -.4em
 
 .user-logged-in .site-logo img
     width: 50px
@@ -80,6 +81,14 @@ h2
       align-items: center
       flex-direction: column
       justify-content: center
+      a
+        color: #232b2b
+        text-decoration: none
+        font-size: 2em
+        font-weight: 400
+        padding: 24px
+        display: inline-block
+        letter-spacing: -.02em
 
 /*HAMBURGER*/
 #hamburger
@@ -90,6 +99,8 @@ h2
   margin: 20px
   width: 48px
   height: 28px
+  background: transparent
+  border: none
   .hamburger-inner,
   .hamburger-inner::before,
   .hamburger-inner::after
@@ -117,29 +128,50 @@ h2
 .view-projects
     max-width: 70rem
     margin: 0 auto
+    padding: 4em 0
     .field__item
       z-index: 200!important
       position: relative
-    .field--type-image
-      position: absolute
-      top: 0
-      width: 100%
-      height: 100%
-      z-index: 1
+      padding: calc(#{$global-unit} * 2)
+      box-sizing: border-box
+      &.field--type-image
+        position: absolute
+        top: 0
+        width: 100%
+        height: 100%
+        z-index: 1
+        padding: 0px !important
+      &.field--name-node-post-date
+        letter-spacing: 2px
+        font-weight: bolder
+        font-size: .8em
       div
+        border-radius: $radius
+        overflow: hidden
         width: 100%
         height: 100%
         background-size: cover
 
 .views-infinite-scroll-content-wrapper
     display: flex
+    flex-wrap: wrap
     .project
       flex: 1
-      flex-basis: 200px
+      max-width: 33.33
+      flex-shrink: 0
       position: relative
       text-align: center
-      height: 450px
-      margin: 10px
+      height: 500px
+      box-sizing: border-box
+      flex-basis: 33.33%
+      padding: 10px
+      flex-grow: 0
+      border-radius: $radius
+      overflow: hidden
+      @media only screen and (max-width: 600px)
+          flex-basis: 100%
+      h2
+        font-size: 2em
       a
         color: $light
       .layout
@@ -152,3 +184,25 @@ h2
       audio
         width: 100%
         width: -webkit-fill-available
+      .audiofield-player
+        label
+          display: none
+/*ANIMATIONS*/
+=keyframes($fade-in)
+  @-webkit-keyframes #{$fade-in}
+    @content
+  @-moz-keyframes #{$fade-in}
+    @content
+  @-ms-keyframes #{$fade-in}
+    @content
+  @keyframes #{$fade-in}
+    @content
+
+.fade-in
+  animation: fade-in 1.4s
+  +keyframes(fade-in)
+    0%
+      opacity: 0
+      transform: scale(.7,.7)
+    100%
+      opacity: 1

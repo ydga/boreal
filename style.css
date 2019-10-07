@@ -23,7 +23,7 @@ h2 {
   color: #FFF;
 }
 
-.maintenance-page a .layout-container {
+.maintenance-page .layout-container {
   text-align: center;
   display: flex;
   height: 100vh;
@@ -37,23 +37,22 @@ h2 {
   font-size: 14px;
 }
 
-.maintenance-page a .name-and-slogan {
+.maintenance-page .name-and-slogan {
   font-size: 3.4em;
   letter-spacing: -.08em;
 }
 
-.maintenance-page a .header img {
+.maintenance-page .header img {
   width: 40%;
   height: auto;
   clear: both;
 }
 
-.maintenance-page a h1 {
-  font-weight: 200;
+.maintenance-page .header h1 {
   font-weight: 600;
 }
 
-.maintenance-page a:after {
+.maintenance-page .header h1:after {
   content: "®";
   font-size: 10px;
   color: #FFF;
@@ -95,6 +94,16 @@ h2 {
   justify-content: center;
 }
 
+.overlay.open ul.menu a {
+  color: #232b2b;
+  text-decoration: none;
+  font-size: 2em;
+  font-weight: 400;
+  padding: 24px;
+  display: inline-block;
+  letter-spacing: -.02em;
+}
+
 /*HAMBURGER*/
 #hamburger {
   position: fixed;
@@ -104,6 +113,8 @@ h2 {
   margin: 20px;
   width: 48px;
   height: 28px;
+  background: transparent;
+  border: none;
 }
 
 #hamburger .hamburger-inner,
@@ -137,22 +148,34 @@ h2 {
 .view-projects {
   max-width: 70rem;
   margin: 0 auto;
+  padding: 4em 0;
 }
 
 .view-projects .field__item {
   z-index: 200 !important;
   position: relative;
+  padding: calc(8px * 2);
+  box-sizing: border-box;
 }
 
-.view-projects .field--type-image {
+.view-projects .field__item.field--type-image {
   position: absolute;
   top: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
+  padding: 0px !important;
 }
 
-.view-projects .field--type-image div {
+.view-projects .field__item.field--name-node-post-date {
+  letter-spacing: 2px;
+  font-weight: bolder;
+  font-size: .8em;
+}
+
+.view-projects .field__item div {
+  border-radius: 4px;
+  overflow: hidden;
   width: 100%;
   height: 100%;
   background-size: cover;
@@ -160,15 +183,32 @@ h2 {
 
 .views-infinite-scroll-content-wrapper {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .views-infinite-scroll-content-wrapper .project {
   flex: 1;
-  flex-basis: 200px;
+  max-width: 33.33;
+  flex-shrink: 0;
   position: relative;
   text-align: center;
-  height: 450px;
-  margin: 10px;
+  height: 500px;
+  box-sizing: border-box;
+  flex-basis: 33.33%;
+  padding: 10px;
+  flex-grow: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 600px) {
+  .views-infinite-scroll-content-wrapper .project {
+    flex-basis: 100%;
+  }
+}
+
+.views-infinite-scroll-content-wrapper .project h2 {
+  font-size: 2em;
 }
 
 .views-infinite-scroll-content-wrapper .project a {
@@ -189,4 +229,53 @@ h2 {
 .views-infinite-scroll-content-wrapper .project audio {
   width: 100%;
   width: -webkit-fill-available;
+}
+
+.views-infinite-scroll-content-wrapper .project .audiofield-player label {
+  display: none;
+}
+
+/*ANIMATIONS*/
+.fade-in {
+  animation: fade-in 1.4s;
+}
+
+@-webkit-keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fade-in {
+  .fade-in 0% {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  .fade-in 100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7, 0.7);
+  }
+  100% {
+    opacity: 1;
+  }
 }
