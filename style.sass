@@ -1,27 +1,155 @@
-/*GOOGLE FONTS*/
-@import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap')
+/*-- GOOGLE FONTS --*/
+@import url('https://fonts.googleapis.com/css?family=Raleway:100&display=swap')
 
-/*VARIABLES*/
+/*-- MIXINS-- */
+=gradient-text
+  background: $gradient
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+=hyphenate
+  word-wrap: break-word
+  overflow-wrap: break-word
+  -webkit-hyphens: auto
+  -moz-hyphens: auto
+  hyphens: auto
+=field
+  // Remove styles
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none
+  // New Styles
+  box-sizing: border-box
+  padding: #{$global-unit * 2} 0
+  border: none
+  background: transparent
+  width: 100%
+=reset-textarea
+  border: none
+  overflow: auto
+  outline: none
+  -webkit-box-shadow: none
+  -moz-box-shadow: none
+  box-shadow: none
+  resize: none
+  border-radius: 0
+=no-scroll
+  height: 100%
+  width: 100%
+  overflow: hidden
+  position: fixed!important
+=transition ($time: .3s, $function: ease-in-out)
+  transition: $time
+  transition-timing-function: $function
+  -webkit-transition-timing-function: $function
+=delay()
+  @for $i from 1 through 7
+    &:nth-child(#{$i})
+      transition-delay: #{$i * .1}s
+=counter()
+  @for $i from 1 through 7
+    &:nth-child(#{$i})
+      &:before
+        content: "0#{$i - 1 + 1}"
+
+/*-- BEAKPOINTS Loaded --*/
+//phone
+//phone-wide
+//phablet
+//tablet-small
+//tablet
+//tablet-wide
+//desktop
+//desktop-wide
+
+$breakpoints: ("phone": 400px, "phone-wide": 480px, "phablet": 560px, "tablet-small": 640px, "tablet": 768px, "tablet-wide": 1024px, "desktop": 1248px, "desktop-wide": 1440px)
+
+=mq($width, $type: min)
+  @if map_has_key($breakpoints, $width)
+    $width: map_get($breakpoints, $width)
+    @if $type == max
+      $width: $width - 1px
+    @media only screen and (#{$type}-width: $width)
+      @content
+
+/*-- ANIMATIONS --*/
+// Background color animation
+@keyframes moveBackground
+  0%
+    background-position: 0% 50%
+  50%
+    background-position: 100% 50%
+  100%
+    background-position: 0% 50%
+
+// stars
+@function multiple-box-shadow ($n)
+  $value: '#{random(2000)}px #{random(20000)}px #FFF'
+  @for $i from 2 through $n
+    $value: '#{$value} , #{random(2000)}px #{random(2000)}px #FFF'
+
+  @return unquote($value)
+
+$shadows-small:  multiple-box-shadow(700)
+$shadows-medium: multiple-box-shadow(200)
+$shadows-big:    multiple-box-shadow(100)
+
+@keyframes animStar
+  from
+    transform: translateY(0px)
+  to
+    transform: translateY(-2000px)
+
+/*-- VARIABLES --*/
+//Units
+$global-unit: 8px
+$radius: #{$global-unit / 2}
+
+//colors
 $dark: #232b2b
 $light: #FFFFFF
-$gradient: linear-gradient(43deg, #08AEEA 0%, #2AF598 100%)
-$radius: 4px
-$global-unit: 8px
+$accent: #23d5ab
+$accent2: #08AEEA
+$purple: rgba(141, 84, 255,.1)
+$gradient:  linear-gradient(45deg, #32a6ff 0%, #3f6fff 49%, #8d54ff 82%)
+$gradient2: linear-gradient(-45deg, #8d54ff, #ee7752, #e73c7e, #23a6d5, #23d5ab)
 
+// typography
+$first-type: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif
+$second-type: 'Raleway', sans-serif
+
+/*-- YOUTUBE -- aspect ratio --*/
+.video-embed-field-responsive-video
+  position: relative
+  &:after
+    content: ''
+    display: block
+    padding-bottom: 56.25%
+  iframe
+  position: absolute
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  width: 100%
+  height: 100%
+  margin: 0
+
+/*-- GLOBAL STYLES --*/
 body
-  font-family: helvetica, sans-serif
+  font-family: $first-type
   color: $light
   background: $dark
-  font-size: 16px
+  font-size: #{$global-unit * 2}
   line-height: 2em
-
+  scroll-behavior: smooth
+  font-weight: 400
+  letter-spacing: normal
+  &.no-scroll
+    +no-scroll
 a
   text-decoration: none
 
-h2
-   font-family: 'Abril Fatface', cursive
-
-/*MAINTENANCE*/
+/*-- MAINTENANCE page only --*/
 .maintenance-page
   a
     color: #FFF
@@ -38,13 +166,14 @@ h2
     margin: 0px auto
     font-size: 14px
   .name-and-slogan
-    font-size: 3.4em;
-    letter-spacing: -.08em;
+    font-size: 3.4em
+    letter-spacing: -.08em
   .header
-    img
-      width: 40%
-      height: auto
-      clear: both
+    .site-logo
+      img
+        width: 40%!important
+        height: auto
+        clear: both
     h1
       font-weight: 600
       &:after
@@ -54,64 +183,102 @@ h2
         font-weight: 200
         margin-left: -.4em
 
-.user-logged-in .site-logo img
-    width: 50px
-    height: auto
-
-/*OFF CANVAS*/
+/*-- OFF CANVAS --*/
 .overlay
-  background: $gradient
-  width: 0
-  height: 100vh
+  width: 100vw
+  height: 0
+  overflow: hidden
   position: fixed
   top: 0
   right: 0px
   z-index: 400
   opacity: 0
-  transition: .3s
+  background: $gradient2
+  background-size: 400%
+  background-position: 0 100%
+  animation: moveBackground 40s infinite
+  +transition
+  ul.menu
+    display: none
+    li
+      +delay
+      +counter
+      +transition
+      opacity: 0
+      position: relative
+      &:before
+        position: absolute
+        height: 100%
+        box-sizing: border-box
+        display: flex
+        align-items: center
+        color: $dark
+        opacity: .5
+        font-weight: 400
+        left: -20px
+        font-size: .8em
+      &.menu-item--active-trail
+        a
+          position: relative
+          &:after
+            border-bottom: 1px solid $dark
+            content: ""
+            left: 0
+            position: absolute
+            right: 0
+            top: 50%
+            opacity: .5
+    a
+      color: $dark
+      font-size: 2.6em
+      padding: 16px 8px
+      font-weight: 800
+      display: inline-block
+      letter-spacing: -.04em
+      +mq(tablet-wide)
+        font-size: 3em
+        padding: 24px 8px
   &.open
-    width: 100vw
+    height: 100vh
     opacity: 1
     ul.menu
-      margin: 0
+      margin: 0 auto
       padding: 0
-      height: 100vh
-      width: 100vw
+      height: calc(100vh - 80px)
+      width: 80%
       display: flex
-      align-items: center
       flex-direction: column
       justify-content: center
-      a
-        color: #232b2b
-        text-decoration: none
-        font-size: 2em
-        font-weight: 400
-        padding: 24px
-        display: inline-block
-        letter-spacing: -.02em
+      +mq(tablet-wide)
+        width: 90%
+        height: 100vh
+      li
+        opacity: 1
 
-/*HAMBURGER*/
+/*-- HAMBURGER --*/
 #hamburger
   position: fixed
-  top: 10px
+  top: 0px
   right: 0px
   z-index: 401
-  margin: 20px
-  width: 48px
-  height: 28px
-  background: transparent
-  border: none
+  padding: 16px
+  width: 52px
+  height: 56px
+  cursor: pointer
+  box-sizing: border-box
   .hamburger-inner,
   .hamburger-inner::before,
   .hamburger-inner::after
     background-color: white
+    height: #{$global-unit / 3}
+    border-radius: 0
   &.is-active
     .hamburger-inner,
     .hamburger-inner::before,
     .hamburger-inner::after
       background-color: $dark!important
 
-//*HAMBURGER WHEN LOGED IN*//
+// HAMBURGER User-logged-in
 .toolbar-tray-open
   &.toolbar-horizontal
     .hamburger
@@ -124,11 +291,73 @@ h2
     .overlay
       top: 39px
 
-//*PROJECTS*//
-.view-projects
+//*-- HEADER --*//
+.block-system-branding-block
+  display: flex
+  align-items: center
+  > *
+    padding: 16px 0 16px 16px
+  .site-logo
+    img
+      width: 50px
+      height: auto
+  .site-name
+    a
+      color: $light
+      font-weight: 800
+      letter-spacing: -.04em
+      font-size: 2em
+      &:after
+        content: "\00AE"
+        font-size: .4em
+        color: #FFF
+        font-weight: 200
+
+//*-- PAGES --*//
+.main-container
+  min-height: 100vh
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+.region-content
+  width: 100%
+  margin: 0
+  padding: 0px #{$global-unit * 2}
+  overflow-y: hidden
+  overflow-x: scroll
+  box-sizing: border-box
+  +mq(tablet-wide)
     max-width: 70rem
-    margin: 0 auto
-    padding: 4em 0
+    margin: 0px auto
+    padding: #{$global-unit * 4}
+    overflow-y: hidden
+  h1
+    letter-spacing: -.04em
+    font-size: 3.8em
+    line-height: 1.2em
+    font-weight: 800
+    margin: 16px 0px
+    +hyphenate
+    +gradient-text
+  .field--name-field-type
+    opacity: .5
+    font-weight: 600
+.page-node-type-project
+  .region-content
+    +mq(desktop)
+      max-width: 90rem
+      overflow-x: hidden
+//*-- IMAGES IN PARAGRAPHS--*/
+.field--name-field-content-layouts
+  img
+    width: 100%
+    height: auto
+  .field__item
+    margin: #{$global-unit * 2} 0
+    .row
+      align-items: center
+//*-- PROJECTS --*//
+.view-projects
     .field__item
       z-index: 200!important
       position: relative
@@ -143,7 +372,7 @@ h2
         padding: 0px !important
       &.field--name-node-post-date
         letter-spacing: 2px
-        font-weight: bolder
+        font-weight: 800
         font-size: .8em
       div
         border-radius: $radius
@@ -151,58 +380,219 @@ h2
         width: 100%
         height: 100%
         background-size: cover
+      &.field--name-node-post-date
+        align-self: center
+        position: absolute
+        top: 0px
+      &.field--name-node-link
+        width: 100%
+        height: 100%
+        position: absolute
+        top: 0px
+        cursor: pointer
+        display: block
+        z-index: 200
+        +transition
+        &:hover
+          // hover styles here
+        a
+          display: flex
+          height: 100%
+          width: 100%
+          align-items: flex-end
+          justify-content: center
+          font-weight: 800
 
 .views-infinite-scroll-content-wrapper
-    display: flex
+  width: 100vw
+  display: flex
+  overflow-y: hidden
+  overflow-x: scroll
+  scroll-behavior: smooth
+  -webkit-overflow-scrolling: touch
+  +mq (tablet-wide)
+    width: 100%
+    overflow-y: scroll
+    overflow-x: hidden
     flex-wrap: wrap
-    .project
-      flex: 1
-      max-width: 33.33
-      flex-shrink: 0
-      position: relative
-      text-align: center
-      height: 500px
-      box-sizing: border-box
+  .project
+    flex: 1
+    flex-shrink: 0
+    position: relative
+    text-align: center
+    height: 60vh
+    box-sizing: border-box
+    flex-basis: 70%
+    padding: 0px
+    margin: 0 $global-unit #{$global-unit * 2} $global-unit
+    flex-grow: 0
+    border-radius: $radius
+    overflow: hidden
+    box-sizing: border-box
+    +mq (tablet-wide)
       flex-basis: 33.33%
-      padding: 10px
-      flex-grow: 0
-      border-radius: $radius
-      overflow: hidden
-      @media only screen and (max-width: 600px)
-          flex-basis: 100%
-      h2
-        font-size: 2em
-      a
-        color: $light
-      .layout
+      max-width: calc(33.33% - #{$global-unit * 2})
+      height: 600px
+      +transition
+    h2
+      font-size: 2.4em
+      line-height: 1em
+      letter-spacing: -.04em
+      text-shadow: 0px 0px 10px rgba(0,0,0,.3)
+    a
+      color: $light
+    .layout
+      height: 100%
+      .layout__region--content
         height: 100%
-        .layout__region--content
-          height: 100%
-          display: flex
-          flex-direction: column
-          justify-content: space-between
-      audio
-        width: 100%
-        width: -webkit-fill-available
-      .audiofield-player
-        label
-          display: none
-/*ANIMATIONS*/
-=keyframes($fade-in)
-  @-webkit-keyframes #{$fade-in}
-    @content
-  @-moz-keyframes #{$fade-in}
-    @content
-  @-ms-keyframes #{$fade-in}
-    @content
-  @keyframes #{$fade-in}
-    @content
+        display: flex
+        flex-direction: column
+        justify-content: center
 
-.fade-in
-  animation: fade-in 1.4s
-  +keyframes(fade-in)
-    0%
-      opacity: 0
-      transform: scale(.7,.7)
-    100%
-      opacity: 1
+/*-- AUDIO FIELD--*/
+.audiofield-player
+  label
+    display: none
+
+/*-- PAGINADOR --*/
+ul.flippy
+  margin: 0!important
+  padding: 0!important
+  text-align: left!important
+  li
+    a
+      color: $light
+      opacity: .5
+      font-weight: 600
+
+/*-- FORMS --*/
+.contact-message-form
+  .form-item
+    position: relative
+    &:after
+      content: ""
+      background: $gradient
+      display: block
+      height: 1px
+      width: 100%
+      position: absolute
+      bottom: 0
+      box-sizing: border-box
+    &:active
+      padding: $global-unit $global-unit
+  label
+    font-weight: 800
+    color: $accent2
+    +gradient-text
+  input
+    +reset-textarea
+    +field
+    +transition
+    &:focus
+      background: $purple
+      padding: #{$global-unit * 2}
+  .form-textarea
+    +reset-textarea
+    +field
+    height: 10rem!important
+    +transition
+    &:focus
+      background: rgba(141, 84, 255,.1)!important
+      padding: #{$global-unit * 2}
+  .button
+    color: $dark
+    background: $gradient
+    padding: #{$global-unit * 2} #{$global-unit * 3}
+    border: none
+    font-weight: 800
+    border-radius: #{$global-unit / 4}
+    display: block
+    width: 100%
+    +mq(tablet-wide)
+      display: inline-block
+      width: auto
+.field--label-hidden
+  label
+    display: none!important
+
+/*-- FOOTER --*/
+.copyright
+  padding: #{$global-unit * 2}
+  text-align: center
+  font-size: .8em
+  opacity: .5
+/*-- STARS --*/
+#stars
+  width: 1px
+  height: 1px
+  background: transparent
+  box-shadow: $shadows-small
+  animation: animStar 50s linear infinite
+  opacity: .5
+
+  &:after
+    content: " "
+    position: absolute
+    top: 2000px
+    width: 1px
+    height: 1px
+    background: transparent
+    box-shadow: $shadows-small
+    opacity: .8
+
+#stars2
+  width: 2px
+  height: 2px
+  background: transparent
+  box-shadow: $shadows-medium
+  animation: animStar 100s linear infinite
+  opacity: .4
+
+  &:after
+    content: " "
+    position: absolute
+    top: 2000px
+    width: 2px
+    height: 2px
+    background: transparent
+    box-shadow: $shadows-medium
+    opacity: .6
+
+#stars3
+  width: 3px
+  height: 3px
+  background: transparent
+  box-shadow: $shadows-big
+  animation: animStar 150s linear infinite
+  opacity: .4
+
+  &:after
+    content: " "
+    position: absolute
+    top: 2000px
+    width: 3px
+    height: 3px
+    background: transparent
+    box-shadow: $shadows-big
+
+/*-- ADMIN TABS --*/
+.tabs
+  a
+    font-weight: 800
+    font-size: .8em
+    color: rgba(333,333,333,.5)
+    text-transform: uppercase
+    letter-spacing: .04em
+    &.is-active,
+    &:hover,
+    &:focus,
+    &:active
+      background: transparent
+      color: $accent2
+
+.messages--status
+  display: none
+
+/*-- FLEX DS Layouts --*/
+.layout
+  align-items: center
